@@ -1,0 +1,33 @@
+const { MongoClient } = require('mongodb');
+
+// Connection URL
+const url = 'mongodb://localhost:27017';
+// Database Name
+const dbName = 'employee';
+
+// Create a new MongoClient
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+
+async function main() {
+  try {
+    // Connect to the MongoDB server
+    await client.connect();
+    console.log('Connected successfully to server');
+
+    const db = client.db(dbName);
+
+    // Example collection and document insertion
+    const collection = db.collection('employees');
+    const insertResult = await collection.insertOne({ name: 'John Doe', position: 'Software Engineer', salary: 60000 });
+    console.log('Insert result:', insertResult);
+
+    // Example query
+    const findResult = await collection.find({}).toArray();
+    console.log('Found documents:', findResult);
+  } finally {
+    // Close the connection
+    await client.close();
+  }
+}
+
+main().catch(console.error);
